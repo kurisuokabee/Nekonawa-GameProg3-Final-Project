@@ -12,8 +12,8 @@ TagManager:
   - Water
   - UI
   - Camera Confiner
-  - 
-  - 
+  - Clickable
+  - Quest Item
   - 
   - 
   - 
@@ -46,6 +46,9 @@ TagManager:
     locked: 0
   - name: Foreground
     uniqueID: 2587919899
+    locked: 0
+  - name: Quest
+    uniqueID: 1263957779
     locked: 0
   m_RenderingLayers:
   - Default
