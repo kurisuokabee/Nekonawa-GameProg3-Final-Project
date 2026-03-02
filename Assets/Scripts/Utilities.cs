@@ -4,6 +4,7 @@ public static class Utilities
 {   
     static LayerMask clickableLayer = LayerMask.GetMask("Clickable");
 
+    //Getting the gameobject of the clicked object
     public static GameObject GetClickedObject()
     {
         Vector2 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -15,6 +16,7 @@ public static class Utilities
         return null;
     }
 
+    //Returns true if player clicked an object
     public static bool HitTarget()
     {
         return GetClickedObject() != null;

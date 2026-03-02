@@ -40,6 +40,8 @@ public class GameController : MonoBehaviour
     {   
         //Change state to playing on start
         ChangeState(PlayingState);
+
+        //Load a checkpoint
         //LoadGame();
     }
 

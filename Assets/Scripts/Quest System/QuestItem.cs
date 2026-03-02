@@ -19,7 +19,7 @@ public class QuestItem : MonoBehaviour
             Vector2 direction = (playerQuests.transform.position - transform.position).normalized;
 
             // Move towards the player
-            transform.Translate(direction * 5f * Time.deltaTime);
+            transform.Translate(direction * 8f * Time.deltaTime);
 
             float sqrDistance = (playerQuests.transform.position - transform.position).sqrMagnitude;
             if(sqrDistance <= 0.5f * 0.5f)

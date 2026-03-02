@@ -8,14 +8,21 @@ public class QuestGiverNPC : MonoBehaviour
     public Quest quest;
 
     public PlayerQuests playerQuests;
+
+    #region Quest UI
+    [Header("Quest UI")]
     [SerializeField] GameObject questWindow;
     [SerializeField] GameObject giveItemWindow;
     [SerializeField] TextMeshProUGUI questTitleText;
     [SerializeField] Button acceptButton;
     [SerializeField] Button giveItemButton;
+    #endregion
 
+    [Header("Talking Icon")]
     [SerializeField] private float interactionDistance = 3f;
     [SerializeField] private GameObject talkIcon;
+
+
     bool isTalking = false;
     private static QuestGiverNPC activeNPC;
     void Start()
