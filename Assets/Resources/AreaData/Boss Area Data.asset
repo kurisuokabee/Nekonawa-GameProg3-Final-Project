@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1427d950574af0439ddba8f87f193b2, type: 3}
+  m_Name: Boss Area Data
+  m_EditorClassIdentifier: Assembly-CSharp::AreaData
+  areaName: Boss Area
+  cameraBoundsPrefab: {fileID: 4237414948849752836, guid: ab17eeaa778305343b28bb930fd9828c, type: 3}
