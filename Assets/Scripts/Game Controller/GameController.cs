@@ -42,12 +42,17 @@ public class GameController : MonoBehaviour
         ChangeState(PlayingState);
 
         //Load a checkpoint
-        //LoadGame();
+        LoadGame();
     }
 
     void Update()
     {
         currentState?.Tick();
+
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            ResetSave();
+        }
     }
 
     public void ChangeState(IGameState newState)
@@ -57,12 +62,14 @@ public class GameController : MonoBehaviour
         currentState?.Enter();
     }
 
-    public void SaveGame(Transform spawnPos, string c_currentAreaName)
+    public void SaveGame(Transform spawnPos, string c_currentAreaName, int keys, int health)
     {
         SaveData data = new()
         {
             playerPosX = spawnPos.position.x,
             playerPosY = spawnPos.position.y,
+            playerKeys = keys,
+            playerCurrentHealth = health,
             currentAreaName = c_currentAreaName
         };
 
@@ -78,8 +85,10 @@ public class GameController : MonoBehaviour
         if (data == null)
             return;
 
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
-        if(player == null)
+        GameObject playerGO = GameObject.FindGameObjectWithTag("Player");
+        Player player = playerGO.GetComponent<Player>();
+        PlayerQuests playerQuests = playerGO.GetComponent<PlayerQuests>();
+        if(playerGO == null)
         {
             Debug.LogError("Player not found in scene!");
             return;
@@ -94,7 +103,15 @@ public class GameController : MonoBehaviour
         if(areaToLoad != null)
         {
             AreaManager.Instance.SetCurrentArea(areaToLoad);
-            player.transform.position = new Vector2(data.playerPosX, data.playerPosY);
+            playerGO.transform.position = new Vector2(data.playerPosX, data.playerPosY);
+            player.currentHealth = data.playerCurrentHealth;
+            playerQuests.keysCollected = data.playerKeys;
+
+            if(player.isDead)
+            {
+                player.Respawn();
+            }
+            
 
             Debug.Log("Loaded game in area: " + savedAreaName);
         }
@@ -102,5 +119,12 @@ public class GameController : MonoBehaviour
         {
             Debug.LogWarning("AreaData not found for saved area: " + savedAreaName);
         }
+    }
+
+    public void ResetSave()
+    {
+        SaveData defaultData = new(); // sets default values
+        SaveSystem.SaveGame(defaultData);
+        Debug.Log("Save reset to default values.");
     }
 }
