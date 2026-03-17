@@ -6,7 +6,8 @@ public class AreaTransition : MonoBehaviour
 {
     [SerializeField] private Transform targetSpawnPoint;
     [SerializeField] private AreaData areaData;
-    
+    Player player;
+    PlayerQuests playerQuests;
     private CinemachineCamera virtualCamera; 
 
     void Awake()
@@ -50,8 +51,10 @@ public class AreaTransition : MonoBehaviour
         // --- Update Current Area ---
         AreaManager.Instance.SetCurrentArea(areaData);
 
+        player = other.GetComponent<Player>();
+        playerQuests = other.GetComponent<PlayerQuests>();
         // --- Save Current Area ---
-        GameController.Instance.SaveGame(targetSpawnPoint, areaData.areaName);
+        GameController.Instance.SaveGame(targetSpawnPoint, areaData.areaName, playerQuests.keysCollected, player.currentHealth);
         Debug.Log("Current Area Updated: " + areaData.areaName);
     }
 }

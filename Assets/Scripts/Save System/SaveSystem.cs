@@ -22,3 +22,4 @@ public static class SaveSystem
         return JsonUtility.FromJson<SaveData>(json);
     }
 }
+        
