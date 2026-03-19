@@ -86,7 +86,7 @@ public class GameController : MonoBehaviour
             return;
 
         GameObject playerGO = GameObject.FindGameObjectWithTag("Player");
-        Player player = playerGO.GetComponent<Player>();
+        PlayerHealth player = playerGO.GetComponent<PlayerHealth>();
         PlayerQuests playerQuests = playerGO.GetComponent<PlayerQuests>();
         if(playerGO == null)
         {

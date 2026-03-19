@@ -21,4 +21,18 @@ public static class Utilities
     {
         return GetClickedObject() != null;
     }
+
+    public static void DisablePlayerControls()
+    {
+        FlipPhone.Instance.enabled = false;
+        AimAtMouse.Instance.enabled = false;
+        AbilitySystem.Instance.enabled = false;
+    }
+
+    public static void EnablePlayerControls()
+    {
+        FlipPhone.Instance.enabled = true;
+        AimAtMouse.Instance.enabled = true;
+        AbilitySystem.Instance.enabled = true;
+    }
 }

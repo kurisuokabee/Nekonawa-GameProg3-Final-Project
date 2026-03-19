@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class PlayerMovement : MonoBehaviour
 {   
@@ -59,5 +60,22 @@ public class PlayerMovement : MonoBehaviour
     {
         canMove = false;
         rb.linearVelocity = Vector2.zero;   
+    }
+
+    public void BoostSpeed(float multiplier = 2f, float duration = 3f)
+    {
+        // Stop any previous boost running
+        StopCoroutine("SpeedBoostCoroutine");
+        StartCoroutine(SpeedBoostCoroutine(multiplier, duration));
+    }
+
+    private IEnumerator SpeedBoostCoroutine(float multiplier, float duration)
+    {
+        float originalSpeed = moveSpeed;      // save current speed
+        moveSpeed *= multiplier;               // apply boost
+
+        yield return new WaitForSeconds(duration);
+
+        moveSpeed = originalSpeed;             // reset speed
     }
 }

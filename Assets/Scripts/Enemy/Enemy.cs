@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Enemy : MonoBehaviour
 {   
@@ -13,7 +14,10 @@ public class Enemy : MonoBehaviour
     Transform player;
     [SerializeField] float speed = 5f;
 
+    [SerializeField] Slider healthBar;
+
     bool isChasing = false;
+    
 
     void Awake()
     {
@@ -24,11 +28,16 @@ public class Enemy : MonoBehaviour
     {   
         currentHealth = maxHealth;
         originalPos = transform.position;
+        healthBar.value = maxHealth;
+
+        GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+        if (playerObj)
+            player = playerObj.transform;
     }
 
     void FixedUpdate()
     {
-        if (isChasing)
+        if (isChasing && player != null)
         {
             Vector3 direction = (player.position - transform.position).normalized;
             rb.linearVelocity = direction * speed;
@@ -39,7 +48,6 @@ public class Enemy : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            player = other.transform;
             isChasing = true;
             CancelInvoke(nameof(Respawn));
         }
@@ -51,15 +59,22 @@ public class Enemy : MonoBehaviour
         {
             isChasing = false;
             rb.linearVelocity = Vector2.zero;
-            Invoke(nameof(Respawn), respawnTime);
+            Invoke(nameof(Respawn), respawnTime); // schedule respawn
         }
     }
-
-
 
     public void TakeDamage(int damage)
     {
         currentHealth -= damage;
+        healthBar.value = currentHealth;
+
+        // Start chasing player when hit
+        if (player != null)
+        {   
+            isChasing = true;
+            CancelInvoke(nameof(Respawn));
+        }
+            
 
         Debug.Log(gameObject.name + " Health: " + currentHealth);
 
@@ -81,6 +96,8 @@ public class Enemy : MonoBehaviour
     {
         transform.position = originalPos;
         currentHealth = maxHealth;
+        healthBar.value = maxHealth;
+        isChasing = false;
         gameObject.SetActive(true);
     }
 }
