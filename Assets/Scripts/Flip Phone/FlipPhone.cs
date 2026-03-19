@@ -19,6 +19,7 @@ public class FlipPhone : MonoBehaviour
     [SerializeField] private GameObject gunObj;
     [SerializeField] TextMeshProUGUI text;
     [SerializeField] private GameObject[] blockAttackUI;
+    [SerializeField] AudioClip audioClip;
     private IPhone currentWeapon;
 
     [Header("Mode Switching Cooldown")]
@@ -93,7 +94,8 @@ public class FlipPhone : MonoBehaviour
         currentWeapon = selected.GetComponent<IPhone>();
 
         // Enter new weapon
-        currentWeapon?.Enter();
+        currentWeapon?.Enter(); 
+        //SoundFXManager.Instance.PlaySound(audioClip, transform, 1f);
 
         lastSwitchTime = Time.time;
     }

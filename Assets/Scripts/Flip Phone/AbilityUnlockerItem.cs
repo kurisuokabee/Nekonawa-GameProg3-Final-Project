@@ -22,6 +22,7 @@ public class AbilityUnlockerItem : MonoBehaviour
         if(Utilities.IsCloseToPlayer(transform))
         {   
             abilityToUnlock.isUnlocked = true;
+            abilityToUnlock.onCooldown = false;
             abilitySystem.abilities.Add(abilityToUnlock);
 
             //Auto Equip Abilities on unlock for the 1st time

@@ -17,14 +17,12 @@ public class AbilitySystem : MonoBehaviour
     [Header("Equipped (ONLY 2 usable)")]
     public PlayerAbility slot1;
     public PlayerAbility slot2;
-
-    PlayerManager playerManager;
-
+   
+    
     void Awake()
     {
         Instance = this;
 
-        playerManager = PlayerManager.Instance;
     }
 
     void Update()

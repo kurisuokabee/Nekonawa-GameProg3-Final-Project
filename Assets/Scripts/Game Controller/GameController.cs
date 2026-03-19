@@ -123,6 +123,9 @@ public class GameController : MonoBehaviour
         player.Health.UpdateHealth(data.playerCurrentHealth);
         player.Quests.keysCollected = data.playerKeys;
         player.Abilities.abilities = data.playerAbilities;
+
+        data.slot1.onCooldown = false;
+        data.slot2.onCooldown = false;
         player.Abilities.EquipAbility(data.slot1, 0);
         player.Abilities.EquipAbility(data.slot2, 1);
         AbilityUIManager.Instance.UpdateSlotUI();

@@ -2015,6 +2015,7 @@ MonoBehaviour:
   blockAttackUI:
   - {fileID: 1918868534}
   - {fileID: 174199910}
+  audioClip: {fileID: 8300000, guid: de40c25c265b75446b253aa07a974a9e, type: 3}
   switchCooldown: 2
 --- !u!114 &680038122
 MonoBehaviour:
