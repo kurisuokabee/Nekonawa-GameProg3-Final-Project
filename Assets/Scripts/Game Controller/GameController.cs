@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using UnityEngine;
 
 
@@ -23,7 +24,6 @@ public class GameController : MonoBehaviour
 
     public StatesData statesData;
     
-
     void Awake()
     {   
         if (Instance == null) Instance = this;
@@ -49,9 +49,16 @@ public class GameController : MonoBehaviour
     {
         currentState?.Tick();
 
+
+        //For Testing
         if (Input.GetKeyDown(KeyCode.L))
         {
             ResetSave();
+        }
+
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            SaveGame(transform, "Limbo");
         }
     }
 
@@ -62,14 +69,19 @@ public class GameController : MonoBehaviour
         currentState?.Enter();
     }
 
-    public void SaveGame(Transform spawnPos, string c_currentAreaName, int keys, int health)
+    public void SaveGame(Transform spawnPos, string c_currentAreaName)
     {
+        var player = Utilities.Player;
+
         SaveData data = new()
         {
             playerPosX = spawnPos.position.x,
             playerPosY = spawnPos.position.y,
-            playerKeys = keys,
-            playerCurrentHealth = health,
+            playerKeys = player.Quests.keysCollected,
+            playerCurrentHealth = player.Health.currentHealth,
+            playerAbilities = player.Abilities.abilities,
+            slot1 = player.Abilities.slot1,
+            slot2 = player.Abilities.slot2,
             currentAreaName = c_currentAreaName
         };
 
@@ -81,44 +93,44 @@ public class GameController : MonoBehaviour
     public void LoadGame()
     {
         SaveData data = SaveSystem.LoadGame();
-
         if (data == null)
             return;
 
-        GameObject playerGO = GameObject.FindGameObjectWithTag("Player");
-        PlayerHealth player = playerGO.GetComponent<PlayerHealth>();
-        PlayerQuests playerQuests = playerGO.GetComponent<PlayerQuests>();
-        if(playerGO == null)
+        var player = Utilities.Player;
+
+        if(player.PlayerGO == null)
         {
             Debug.LogError("Player not found in scene!");
             return;
         }
 
         string savedAreaName = data.currentAreaName;
+        
+        AreaData areaToLoad = Resources.LoadAll<AreaData>("AreaData")
+                                    .FirstOrDefault(a => a.areaName == savedAreaName);
 
-        // Find the AreaData asset with this name
-        AreaData[] allAreas = Resources.LoadAll<AreaData>("AreaData"); // load all assets in Resources/AreaData folder
-        AreaData areaToLoad = Array.Find(allAreas, a => a.areaName == savedAreaName);
-
-        if(areaToLoad != null)
+        if (areaToLoad == null)
         {
-            AreaManager.Instance.SetCurrentArea(areaToLoad);
-            playerGO.transform.position = new Vector2(data.playerPosX, data.playerPosY);
-            player.currentHealth = data.playerCurrentHealth;
-            playerQuests.keysCollected = data.playerKeys;
-
-            if(player.isDead)
-            {
-                player.Respawn();
-            }
-            
-
-            Debug.Log("Loaded game in area: " + savedAreaName);
+            Debug.LogWarning($"AreaData not found for saved area: {savedAreaName}");
+            return;
         }
-        else
-        {
-            Debug.LogWarning("AreaData not found for saved area: " + savedAreaName);
-        }
+
+        // Set the current area
+        AreaManager.Instance.SetCurrentArea(areaToLoad);
+
+        // Restore player state
+        player.PlayerGO.transform.position = new Vector2(data.playerPosX, data.playerPosY);
+        player.Health.UpdateHealth(data.playerCurrentHealth);
+        player.Quests.keysCollected = data.playerKeys;
+        player.Abilities.abilities = data.playerAbilities;
+        player.Abilities.EquipAbility(data.slot1, 0);
+        player.Abilities.EquipAbility(data.slot2, 1);
+        AbilityUIManager.Instance.UpdateSlotUI();
+        
+        // Respawn if dead
+        if (player.Health.isDead) player.Health.Respawn();
+
+        Debug.Log($"Loaded game in area: {savedAreaName}");
     }
 
     public void ResetSave()

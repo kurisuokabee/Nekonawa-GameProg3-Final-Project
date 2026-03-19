@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {   
-    [SerializeField]float life = 5f;
+    [SerializeField] float life = 5f;
     float t;
 
     ObjectFactory factory;

@@ -9,14 +9,11 @@ public class PlayerHealth : MonoBehaviour
     [SerializeField]GameObject playerSprite;
     [SerializeField]AudioClip audioClip;
     [SerializeField] Slider healthBar;
-    void Start()
-    {
-        currentHealth = maxHealth;
-        healthBar.value = maxHealth;
-    }
 
+    
     void Update()
-    {
+    {   
+        //For testing
         if (Input.GetKeyDown(KeyCode.Space))
         {   
             SoundFXManager.Instance.PlaySound(audioClip, transform, 1f);
@@ -45,6 +42,12 @@ public class PlayerHealth : MonoBehaviour
             currentHealth = maxHealth;
             healthBar.value = currentHealth;
         }
+    }
+
+    public void UpdateHealth(int health)
+    {
+        currentHealth = health;
+        healthBar.value = currentHealth;
     }
 
     void Die()

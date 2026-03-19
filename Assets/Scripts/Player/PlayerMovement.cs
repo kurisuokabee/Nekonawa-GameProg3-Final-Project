@@ -62,10 +62,10 @@ public class PlayerMovement : MonoBehaviour
         rb.linearVelocity = Vector2.zero;   
     }
 
-    public void BoostSpeed(float multiplier = 2f, float duration = 3f)
+    public void BoostSpeed(float multiplier, float duration)
     {
         // Stop any previous boost running
-        StopCoroutine("SpeedBoostCoroutine");
+        StopCoroutine(nameof(SpeedBoostCoroutine));
         StartCoroutine(SpeedBoostCoroutine(multiplier, duration));
     }
 

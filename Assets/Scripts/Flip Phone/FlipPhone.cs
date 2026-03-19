@@ -1,6 +1,9 @@
+using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
-public enum PhoneMode
+public enum FlipPhoneMode
 {
     Sword,
     Gun,
@@ -10,16 +13,17 @@ public enum PhoneMode
 public class FlipPhone : MonoBehaviour
 {
     public static FlipPhone Instance;
-    public PhoneMode currentMode;
+    [SerializeField] private FlipPhoneMode currentMode;
 
-    public GameObject swordObj;
-    public GameObject gunObj;
-
+    [SerializeField] private GameObject swordObj;
+    [SerializeField] private GameObject gunObj;
+    [SerializeField] TextMeshProUGUI text;
+    [SerializeField] private GameObject[] blockAttackUI;
     private IPhone currentWeapon;
 
     [Header("Mode Switching Cooldown")]
     [SerializeField] private float switchCooldown;
-    private float lastSwitchTime = -Mathf.Infinity;       // so player can switch immediately at start
+    private float lastSwitchTime = -Mathf.Infinity;       
 
     void Awake()
     {
@@ -29,12 +33,15 @@ public class FlipPhone : MonoBehaviour
 
     void Start()
     {
-        SetMode(PhoneMode.Sword);
+        SetFlipPhoneMode(FlipPhoneMode.Sword);
     }
 
     void Update()
     {
         HandleSwitch();
+
+        if (IsCursorOverSpecificUI(blockAttackUI))
+        return; // Don't attack
 
         if (Input.GetKey(KeyCode.Mouse0))
         {
@@ -44,18 +51,18 @@ public class FlipPhone : MonoBehaviour
 
     void HandleSwitch()
     {
-        // Only allow switching if enough time has passed
+        // Weapon Switch Cooldown
         if (Time.time - lastSwitchTime < switchCooldown)
             return;
 
         if (Input.GetKeyDown(KeyCode.Alpha1))
-            SetMode(PhoneMode.Sword);
+            SetFlipPhoneMode(FlipPhoneMode.Sword);
 
         if (Input.GetKeyDown(KeyCode.Alpha2))
-            SetMode(PhoneMode.Gun);
+            SetFlipPhoneMode(FlipPhoneMode.Gun);
     }
 
-    void SetMode(PhoneMode mode)
+    void SetFlipPhoneMode(FlipPhoneMode mode)
     {
         if (currentMode == mode)
         return;
@@ -72,11 +79,13 @@ public class FlipPhone : MonoBehaviour
 
         switch (mode)
         {
-            case PhoneMode.Sword:
+            case FlipPhoneMode.Sword:
                 selected = swordObj;
+                text.text = "Sword Mode";
                 break;
-            case PhoneMode.Gun:
+            case FlipPhoneMode.Gun:
                 selected = gunObj;
+                text.text = "Gun Mode";
                 break;
         }
 
@@ -87,5 +96,26 @@ public class FlipPhone : MonoBehaviour
         currentWeapon?.Enter();
 
         lastSwitchTime = Time.time;
+    }
+
+    bool IsCursorOverSpecificUI(GameObject[] uiObjects)
+    {
+        PointerEventData pointerData = new(EventSystem.current)
+        {
+            position = Input.mousePosition
+        };
+
+        List<RaycastResult> results = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(pointerData, results);
+
+        foreach (RaycastResult r in results)
+        {
+            foreach (var uiObj in uiObjects)
+            {
+                if (r.gameObject == uiObj)
+                    return true; // Mouse is over a specific UI element
+            }
+        }
+        return false;
     }
 }

@@ -2,9 +2,9 @@ using UnityEngine;
 
 public class GunMode : MonoBehaviour, IPhone
 {   
-    [SerializeField] GameObject bulletPrefab;
-    [SerializeField] Transform firePoint;
-    [SerializeField] ObjectFactory factory;
+    [SerializeField] private GameObject bulletPrefab;
+    [SerializeField] private Transform firePoint;
+    [SerializeField] private ObjectFactory factory;
 
     [SerializeField] private float fireRate = 5f; // bullets per second
     private float nextFireTime = 0f;
