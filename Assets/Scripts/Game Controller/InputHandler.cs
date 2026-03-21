@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class InputHandler : MonoBehaviour
 {
-    private Dictionary<KeyCode, ICommand> keyCommands = new Dictionary<KeyCode, ICommand>();
+    private Dictionary<KeyCode, ICommand> keyCommands = new();
 
     public void SetCommand(KeyCode key, ICommand command)
     {

@@ -27,7 +27,7 @@ public class QuestGiverNPC : MonoBehaviour
     private static QuestGiverNPC activeNPC;
     void Start()
     {
-        playerQuests = PlayerQuests.Instance;
+        playerQuests = Utilities.Player.Quests;
     }
 
     void Update()

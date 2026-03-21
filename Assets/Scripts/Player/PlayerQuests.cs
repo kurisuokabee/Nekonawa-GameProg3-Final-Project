@@ -7,7 +7,7 @@ public class PlayerQuests : MonoBehaviour
 
     public List<Quest> quests;
     public List<QuestItem> questItems;
-    public int keysCollected = 0;
+    public int keysCollected;
 
     void Awake()
     {

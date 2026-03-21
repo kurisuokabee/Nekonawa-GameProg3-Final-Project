@@ -23,11 +23,13 @@ public class PlayingState : IGameState
             new PauseCommand(controller, statesData.pausedPanel)
         );
         
+        Utilities.EnablePlayerControls();
     }
 
     public void Exit()
     {
         Debug.Log("Leaving Playing State");
+        Utilities.DisablePlayerControls();
     }
 
     public void Tick()
@@ -35,10 +37,10 @@ public class PlayingState : IGameState
         controller.InputHandler.HandleInput();
 
         //Triggers Gameover for testing
-        if (Input.GetKeyDown(KeyCode.K))
-        {
-            controller.ChangeState(controller.GameOverState);
-        }
+        // if (Input.GetKeyDown(KeyCode.K))
+        // {
+        //     controller.ChangeState(controller.GameOverState);
+        // }
     }
 }
 

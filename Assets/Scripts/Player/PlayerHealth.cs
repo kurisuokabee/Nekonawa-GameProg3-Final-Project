@@ -1,19 +1,19 @@
 using UnityEngine;
+using UnityEngine.UI;
 
-public class Player : MonoBehaviour
+public class PlayerHealth : MonoBehaviour
 {
     [SerializeField] int maxHealth = 100;
     public int currentHealth;
     public bool isDead = false;
     [SerializeField]GameObject playerSprite;
     [SerializeField]AudioClip audioClip;
-    void Start()
-    {
-        currentHealth = maxHealth;
-    }
+    [SerializeField] Slider healthBar;
 
+    
     void Update()
-    {
+    {   
+        //For testing
         if (Input.GetKeyDown(KeyCode.Space))
         {   
             SoundFXManager.Instance.PlaySound(audioClip, transform, 1f);
@@ -24,11 +24,30 @@ public class Player : MonoBehaviour
     public void TakeDamage(int damage)
     {
         currentHealth -= damage;
+        healthBar.value = currentHealth;
 
         if (currentHealth <= 0)
         {
             Die();
         }
+    }
+
+    public void Heal(int heal)
+    {   
+        currentHealth += heal;
+        healthBar.value = currentHealth;
+
+        if(currentHealth >= maxHealth)
+        {
+            currentHealth = maxHealth;
+            healthBar.value = currentHealth;
+        }
+    }
+
+    public void UpdateHealth(int health)
+    {
+        currentHealth = health;
+        healthBar.value = currentHealth;
     }
 
     void Die()
@@ -42,6 +61,7 @@ public class Player : MonoBehaviour
     public void Respawn()
     {
         currentHealth = maxHealth;
+        healthBar.value = maxHealth;
         isDead = false;
         playerSprite.SetActive(true);
     }

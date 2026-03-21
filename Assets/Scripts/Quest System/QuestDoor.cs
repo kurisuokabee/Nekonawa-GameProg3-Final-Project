@@ -10,7 +10,7 @@ public class QuestDoor : MonoBehaviour
     
     void Start()
     {
-        playerQuests = PlayerQuests.Instance;
+        playerQuests = Utilities.Player.Quests;
     }
 
     void Update()

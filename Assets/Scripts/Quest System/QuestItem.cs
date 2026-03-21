@@ -8,26 +8,22 @@ public class QuestItem : MonoBehaviour
 
     void Start()
     {
-        playerQuests = PlayerQuests.Instance;
+        playerQuests = Utilities.Player.Quests;
     }
 
     void Update()
     {
-        if (goToPlayer)
+        if (!goToPlayer) return;
+       
+        // Move towards the player
+        Utilities.MoveTowardsPlayer(transform);
+
+        if(Utilities.IsCloseToPlayer(transform))
         {
-            // Calculate direction towards the player
-            Vector2 direction = (playerQuests.transform.position - transform.position).normalized;
-
-            // Move towards the player
-            transform.Translate(direction * 8f * Time.deltaTime);
-
-            float sqrDistance = (playerQuests.transform.position - transform.position).sqrMagnitude;
-            if(sqrDistance <= 0.5f * 0.5f)
-            {
-                playerQuests.questItems.Add(this);
-                gameObject.SetActive(false);
-            }
+            playerQuests.questItems.Add(this);
+            gameObject.SetActive(false);
         }
+        
     }
 
     void OnTriggerEnter2D(Collider2D hitInfo)
