@@ -1,167 +1,182 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 
 public class QuestGiverNPC : MonoBehaviour
 {
-    public Quest quest;
-
+    [SerializeField] Quest quest;
     public PlayerQuests playerQuests;
 
-    #region Quest UI
-    [Header("Quest UI")]
-    [SerializeField] GameObject questWindow;
-    [SerializeField] GameObject giveItemWindow;
-    [SerializeField] TextMeshProUGUI questTitleText;
-    [SerializeField] Button acceptButton;
-    [SerializeField] Button giveItemButton;
-    #endregion
+    [SerializeField] GameObject talkIcon;
+    [SerializeField] GameObject npcSprite;
+    [SerializeField] NPCData npc;
 
-    [Header("Talking Icon")]
-    [SerializeField] private float interactionDistance = 3f;
-    [SerializeField] private GameObject talkIcon;
+    private bool isTalking = false;
+    private GameObject currentPanel;
+    DialogueUIManager dialogueUIManager;
 
+    [SerializeField] float interactionDistance = 9f;
 
-    bool isTalking = false;
-    private static QuestGiverNPC activeNPC;
+    void Awake()
+    {
+        Utilities.AllNPCs.Add(this);
+    }
+
     void Start()
     {
         playerQuests = Utilities.Player.Quests;
+        dialogueUIManager = Utilities.DialogueUIManager;
+        quest = npc.quest.Init();
     }
 
     void Update()
     {
-        if (playerQuests != null && !isTalking)
-        {
-            UpdateTalkableVisual();
-        }
-        else if (isTalking)
-        {
-            talkIcon.SetActive(false); // hide while talking
-        }
-
+        // Only show talk icon if not talking
+        talkIcon.SetActive(!isTalking && Utilities.NPCDistanceToPlayer(transform) <= interactionDistance);
     }
 
-    public void OpenQuestWindow()
-    {   
-        questWindow.SetActive(true);
-
-        //Set Quest Title
-        Transform titleTransform = questWindow.transform.Find("Quest Title");
-        questTitleText = titleTransform.GetComponent<TextMeshProUGUI>();
-        questTitleText.text = quest.questTitle;
-
-        //Add a Listener to button
-        acceptButton = questWindow.GetComponentInChildren<Button>();
-        acceptButton.onClick.RemoveAllListeners();
-        acceptButton.onClick.AddListener(AcceptQuest);
-
-        questWindow.transform.position = transform.position + new Vector3(0, 3, 0);
-    }
-
-    public void AcceptQuest()
+    public void StartConversation(List<QuestItem> questItems)
     {
-        Debug.Log("Quest Accepted!");
+        // Check distance
+        if (Utilities.NPCDistanceToPlayer(transform) > interactionDistance)
+        {
+            Debug.Log("NPC is too far away to interact.");
+            return;
+        }
 
-        questWindow.SetActive(false);
+        // Start Talking if player close to npc
+        isTalking = true;
+        talkIcon.SetActive(false);
 
+        StartDialogue(questItems);
+    }
+
+    void StartDialogue(List<QuestItem> questItems)
+    {   
+        if (currentPanel != null)
+        return;
+
+        DialoguePanel panel = dialogueUIManager.CreateNPCDialoguePanel(transform, npc, EndTalk);
+        currentPanel = panel.gameObject;
+
+        if (!quest.isActive && !quest.isFinished)
+            StartingQuestDialogue(panel);
+        else if(quest.isActive && !quest.isFinished)
+        {   
+            // Find the quest item from player
+            QuestItem foundItem = questItems.Find(item => item.questItemName == quest.questGoal.requiredQuestItem);
+
+            // Init the quest item if foundItem is not null, else make quest item default
+            QuestItemName questItemName = foundItem != null ? foundItem.questItemName : QuestItemName.Default;
+
+            FinishingQuestDialogue(questItemName, panel);
+        }
+    }
+
+    void StartingQuestDialogue(DialoguePanel panel)
+    {
+        panel.SetDialogue(npc.StartingDialogue);
+        dialogueUIManager.InitInteractButton(this, panel, AcceptQuest, "Accept");
+    }
+
+    void FinishingQuestDialogue(QuestItemName item, DialoguePanel panel)
+    {
+        panel.SetDialogue(npc.FinishingDialogue);
+        dialogueUIManager.InitInteractButton(this, panel, () => TryGiveItem(item), "Give");
+    }
+
+    void FinishedQuestDialogue()
+    {   
+        EndTalk();
+
+        DialoguePanel newPanel = dialogueUIManager.CreateNPCDialoguePanel(transform, npc, EndTalk);
+        currentPanel = newPanel.gameObject;
+
+        List<string>  dialogue = new List<string> { "Thanks Again! and GoodLuck!" };
+        newPanel.SetDialogue(dialogue);
+        dialogueUIManager.InitInteractButton(this, newPanel, FreeNPC, "Continue");
+    }
+
+    void AcceptQuest()
+    {
         quest.isActive = true;
         playerQuests.quests.Add(quest);
-
         EndTalk();
     }
 
-    public void OpenGivingItemWindow(string item)
-    {   
-        giveItemWindow.SetActive(true);
-
-        //Set Quest Title
-        Transform titleTransform = giveItemWindow.transform.Find("Quest Title");
-        questTitleText = titleTransform.GetComponent<TextMeshProUGUI>();
-        questTitleText.text = quest.questTitle;
-
-        //Add a Listener to button
-        giveItemButton = giveItemWindow.GetComponentInChildren<Button>();
-        giveItemButton.onClick.RemoveAllListeners();
-        giveItemButton.onClick.AddListener(() => TryGiveItem(item));
-
-        giveItemWindow.transform.position = transform.position + new Vector3(0, 3, 0);
-    }
-
-    public void TryGiveItem(string item)
+    void TryGiveItem(QuestItemName item)
     {
-        if(quest.isActive)
+        if (!quest.isActive) return;
+
+        quest.questGoal.GiveQuestItem(item);
+
+        // Remove old panel
+        EndTalk();
+
+        DialoguePanel newPanel = dialogueUIManager.CreateNPCDialoguePanel(transform, npc, EndTalk);
+        currentPanel = newPanel.gameObject;
+
+        List<string> dialogue;
+
+        if (quest.questGoal.IsReached())
         {
-            quest.questGoal.GiveQuestItem(item);
-
-            if(quest.questGoal.IsReached())
-            {
-                playerQuests.AddKey();
-                quest.Complete();
-                giveItemWindow.SetActive(false);
-                EndTalk();
-            }
-            else
-            {
-                Debug.Log("Quest Item not Found!");
-            }
-        }
-    }
-
-    void UpdateTalkableVisual()
-    {
-        float sqrDistance = (playerQuests.transform.position - transform.position).sqrMagnitude;
-        talkIcon.SetActive(sqrDistance <= interactionDistance * interactionDistance);
-    }
-
-    public void TryInteractNPC(List<QuestItem> questItems)
-    {   
-        float sqrDistance = (playerQuests.transform.position - transform.position).sqrMagnitude;
-        if (sqrDistance <= interactionDistance * interactionDistance)
-        {   
-            // End previous NPC conversation if there is one
-            if (activeNPC != null && activeNPC != this)
-            {
-                activeNPC.EndTalk();
-            }
-
-            isTalking = true;
-            activeNPC = this;
-            talkIcon.SetActive(false);
-
-            if (!quest.isActive)
-            {
-                OpenQuestWindow();
-            }
-            else //Quest is Active and will Open the window for giving the item
-            {   
-                QuestItem foundQuestItem = questItems.Find(item => item.questItemName == quest.questGoal.requiredQuestItem);
-                string questItemName = "";
-
-                if (foundQuestItem != null)
-                {
-                    Debug.Log("Found item: " + foundQuestItem.questItemName);
-                    questItemName = foundQuestItem.questItemName;
-                }
-                else
-                {
-                    Debug.Log("Item not found.");
-                }
-
-                OpenGivingItemWindow(questItemName);
-            }
+            dialogue = new List<string> { "Thank you! Here's your Reward!" };
+            newPanel.SetDialogue(dialogue);
+            dialogueUIManager.InitInteractButton(this, newPanel, GiveReward, "Receive");
         }
         else
         {
-            Debug.Log("NPC is not yet Interactable.");
+            dialogue = new List<string> { "Sorry, you don't have the item yet." };
+            newPanel.SetDialogue(dialogue);
+            dialogueUIManager.InitInteractButton(this, newPanel, EndTalk , "Back");
         }
     }
 
-    public void EndTalk()
+    void GiveReward()
     {
-        isTalking = false;
-        activeNPC = null;
+        playerQuests.AddKey();
+        quest.Complete();
+        
+        FinishedQuestDialogue();
     }
 
+    void EndTalk()
+    {
+        isTalking = false;
+        Utilities.Factory.Release(ObjectType.Dialogue, currentPanel);
+        currentPanel = null;
+    }
+
+    void FreeNPC()
+    {
+        isTalking = false;
+        Utilities.Factory.Release(ObjectType.Dialogue, currentPanel);
+        currentPanel = null;
+
+        GameController.Instance.SaveGame();
+        npcSprite.SetActive(false);
+    }
+
+    public QuestSaveData GetSaveData()
+    {
+        return new QuestSaveData
+        {
+            questID = quest.questTitle.ToString(),
+            isActive = quest.isActive,
+            isFinished = quest.isFinished,
+        };
+    }
+
+    public void LoadFromSave(QuestSaveData data)
+    {
+        if (data.questID != quest.questTitle.ToString()) return;
+
+        quest.isActive = data.isActive; 
+        quest.isFinished = data.isFinished;
+        
+        npcSprite.SetActive(!quest.isFinished);
+    }
 }

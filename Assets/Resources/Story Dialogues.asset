@@ -1,0 +1,105 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: daf3e3cd53095704aa2764499668e6b9, type: 3}
+  m_Name: Story Dialogues
+  m_EditorClassIdentifier: Assembly-CSharp::StoryDialogueData
+  blocks:
+  - blockName: 0
+    lines:
+    - speakerName: 0
+      line: Where am I?
+    - speakerName: 3
+      line: '*ring* *ring*'
+    - speakerName: 0
+      line: Hello?
+    - speakerName: 2
+      line: Hello! Welcome to hell!
+    - speakerName: 2
+      line: Not to scare you but there is a monster coming for you.
+    - speakerName: 2
+      line: 'I echanted your Flip Phone. Press 1 or 2 on your phone to turn it into
+        a Weapon! '
+    - speakerName: 2
+      line: I'll Call you again!
+  - blockName: 1
+    lines:
+    - speakerName: 2
+      line: '*ring* *ring'
+    - speakerName: 1
+      line: Wow, you defeated it!
+    - speakerName: 1
+      line: Let me Introduce myself! I am Fern! A spirit with a phone.
+    - speakerName: 0
+      line: Oh, with a phone? But wait a minute, I AM IN HELL? Am I dead?
+    - speakerName: 1
+      line: No, you are not dead. You we're summoned here, I think.
+    - speakerName: 0
+      line: Summoned? by who? How do I get out of here?
+    - speakerName: 1
+      line: There's only one way and that is to open the Door with 3 locks.
+    - speakerName: 1
+      line: You need to find the ghosts which holds the key. They are found hereat
+        the Limbo Area.
+    - speakerName: 0
+      line: Okay, got it! This is just like a video game, huh? I've been waiting
+        for like this to happen.
+    - speakerName: 1
+      line: What? Anyways, look out for my calls and Goodluck out there.
+    - speakerName: 0
+      line: Sure, Fern!
+  - blockName: 2
+    lines:
+    - speakerName: 1
+      line: Welcome! Thanks for opening the door, HAHAHA!
+    - speakerName: 0
+      line: Well, you said so didn't you? Wait...
+    - speakerName: 1
+      line: It is I, Lucifer, Who summoned you here in hell!
+    - speakerName: 0
+      line: Lucifer? You're Fern???
+    - speakerName: 4
+      line: Yes, I Tricked you! So now, GIVE ME YOUR CHARGER!!!!!!!!!!!!!!
+    - speakerName: 0
+      line: My Charger? Wait...STOP!
+  - blockName: 3
+    lines:
+    - speakerName: 4
+      line: No! How am I defeated? This can't be happening...
+    - speakerName: 0
+      line: Well, that's because I have plot armour.
+    - speakerName: 4
+      line: What are you talking about? GIVE ME YOUR CHARGER! and I'll let you go
+        back to earth.
+    - speakerName: 0
+      line: Relax, bro! Why do you even need it? and Why not just summon a charger
+        in the first place?
+    - speakerName: 4
+      line: Of course I also need someone to free me and you're THE UNLUCKY ONE WHO
+        GOT SUMMONED!
+    - speakerName: 0
+      line: Nah, I'm pretty lucky. I can just give you my charger and go home to
+        earth. Here you go!
+    - speakerName: 4
+      line: Oh, What? You're giving it? No need to kill you then.
+    - speakerName: 0
+      line: As I said I have plot armour, you can't kill me. Can you now bring me
+        back to earth?
+    - speakerName: 4
+      line: The hell even is plot armour?! tsk begone now!
+    - speakerName: 0
+      line: Before I go, I have one last thing to say...
+    - speakerName: 0
+      line: With my charger, now you could start Charging in Hell.
+    - speakerName: 4
+      line: Yeah, who cares...
+    - speakerName: 0
+      line: HEHE!

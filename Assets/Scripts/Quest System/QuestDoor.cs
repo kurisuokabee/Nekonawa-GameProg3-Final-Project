@@ -17,7 +17,7 @@ public class QuestDoor : MonoBehaviour
     {
         if(Input.GetMouseButtonDown(0))
         {
-            if (Utilities.HitTarget())
+            if (Utilities.HitTarget<QuestDoor>())
             {
                 TryOpenDoor();
             }

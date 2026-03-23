@@ -7,7 +7,7 @@ public enum FlipPhoneMode
 {
     Sword,
     Gun,
-    Default
+    FlipPhone
 }
 
 public class FlipPhone : MonoBehaviour
@@ -30,11 +30,6 @@ public class FlipPhone : MonoBehaviour
     {
         Instance = this;
         
-    }
-
-    void Start()
-    {
-        SetFlipPhoneMode(FlipPhoneMode.Sword);
     }
 
     void Update()
@@ -87,7 +82,7 @@ public class FlipPhone : MonoBehaviour
             case FlipPhoneMode.Gun:
                 selected = gunObj;
                 text.text = "Gun Mode";
-                break;
+                break;  
         }
 
         selected.SetActive(true);

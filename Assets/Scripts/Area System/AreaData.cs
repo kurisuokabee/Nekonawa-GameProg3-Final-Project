@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "New AreaData", menuName = "Game/Area Data")]
+[CreateAssetMenu(fileName = "New AreaData", menuName = "Area/Area Data")]
 public class AreaData : ScriptableObject
 {
     public string areaName;              

@@ -12,6 +12,8 @@ public class SaveData
     public PlayerAbility slot2;
     public string currentAreaName;
 
+    public List<QuestSaveData> quests;
+
     public SaveData()
     {
         playerPosX = 0f;               // starting X position
@@ -22,5 +24,6 @@ public class SaveData
         slot1 = null;
         slot2 = null;
         currentAreaName = "Limbo"; // default area
+        quests = new List<QuestSaveData>();
     }
 }

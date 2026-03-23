@@ -16,6 +16,11 @@ public class AbilityUIManager : MonoBehaviour
     void Awake()
     {
         Instance = this;
+        
+    }
+
+    void Start()
+    {
         abilitySystem = PlayerManager.Instance.Abilities;
     }
 

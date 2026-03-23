@@ -25,11 +25,11 @@ public class PlayerQuests : MonoBehaviour
 
     void TalkToNPC()
     {
-        if (Utilities.HitTarget())
+        if (Utilities.HitTarget<QuestGiverNPC>())
         {
             if (Utilities.GetClickedObject().TryGetComponent<QuestGiverNPC>(out var npc))
             {
-                npc.TryInteractNPC(questItems);
+                npc.StartConversation(questItems);
             }    
         }
     }
@@ -39,4 +39,5 @@ public class PlayerQuests : MonoBehaviour
         keysCollected++;
         Debug.Log("Key collected! Total keys: " + keysCollected);
     }
+
 }

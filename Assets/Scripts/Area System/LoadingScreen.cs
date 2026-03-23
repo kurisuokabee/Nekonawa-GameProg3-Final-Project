@@ -19,7 +19,7 @@ public class LoadingScreen : MonoBehaviour
         loadingImage.color = c;
     }
 
-    public void ShowLoading(float duration = 0.2f)
+    public void ShowLoading(float duration = 0.5f)
     {
         StartCoroutine(FadeRoutine(duration));
     }
@@ -29,7 +29,7 @@ public class LoadingScreen : MonoBehaviour
         // Fade IN 
         float t = 0f;
         loadingPanel.SetActive(true);
-        PlayerMovement.Instance.DisableMovement();
+        
 
         while (t < duration)
         {   
@@ -43,7 +43,7 @@ public class LoadingScreen : MonoBehaviour
             yield return null;
         }
 
-        yield return new WaitForSecondsRealtime(.8f);
+        yield return new WaitForSecondsRealtime(1f);
 
         // Fade OUT )
         t = 0f;
@@ -59,7 +59,7 @@ public class LoadingScreen : MonoBehaviour
             yield return null;
         }
 
-        PlayerMovement.Instance.EnableMovement();
+      
         loadingPanel.SetActive(false);
     }
 }
