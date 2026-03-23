@@ -22,8 +22,6 @@ public class PlayingState : IGameState
             KeyCode.Escape,
             new PauseCommand(controller, statesData.pausedPanel)
         );
-        
-        Utilities.EnablePlayerControls();
     }
 
     public void Exit()
@@ -37,10 +35,10 @@ public class PlayingState : IGameState
         controller.InputHandler.HandleInput();
 
         //Triggers Gameover for testing
-        // if (Input.GetKeyDown(KeyCode.K))
-        // {
-        //     controller.ChangeState(controller.GameOverState);
-        // }
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            controller.ChangeState(controller.GameOverState);
+        }
     }
 }
 

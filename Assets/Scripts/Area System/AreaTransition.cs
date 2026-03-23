@@ -3,33 +3,36 @@ using UnityEngine;
 using Unity.Cinemachine;
 
 public class AreaTransition : MonoBehaviour
-{
-    [SerializeField] private Transform targetSpawnPoint;
+{   
+    public static AreaTransition Instance;
+    [SerializeField] private Transform targetSpawnPoint;            
     [SerializeField] private AreaData areaData;
     private CinemachineCamera virtualCamera; 
 
     void Awake()
-    {
-        virtualCamera = GameObject.Find("Player CAM").GetComponent<CinemachineCamera>();
+    {   
+        Instance = this;
+        virtualCamera = Utilities.virtualCamera;
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
         {   
-            StartCoroutine(TeleportPlayer(other));
+            StartCoroutine(TeleportPlayer(other.transform));
         }
     }
 
-    private IEnumerator TeleportPlayer(Collider2D other)
+    public IEnumerator TeleportPlayer(Transform other)
     {
         Debug.Log("Area Switched");
 
+        PlayerMovement.Instance.DisableMovement();
         // Show loading screen
         LoadingScreen.Instance.ShowLoading();
 
         // Wait for fade duration
-        yield return new WaitForSecondsRealtime(0.8f);
+        yield return new WaitForSecondsRealtime(1.5f);
 
         // Teleport player and reset velocity
         Vector3 oldPosition = other.transform.position;
@@ -48,9 +51,17 @@ public class AreaTransition : MonoBehaviour
 
         // --- Update Current Area ---
         AreaManager.Instance.SetCurrentArea(areaData);
+        AreaManager.Instance.SetAreaVariables(areaData, targetSpawnPoint.position);
 
         // --- Save Current Area ---
-        GameController.Instance.SaveGame(targetSpawnPoint, areaData.areaName);
+        GameController.Instance.SaveGame();
         Debug.Log("Current Area Updated: " + areaData.areaName);
+
+        PlayerMovement.Instance.EnableMovement();
+
+        if(areaData.areaName == "Boss")
+        {   
+            StoryManager.Instance.EnterState(StoryState.BossArea);
+        }
     }
 }

@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1427d950574af0439ddba8f87f193b2, type: 3}
   m_Name: Door Area Data
   m_EditorClassIdentifier: Assembly-CSharp::AreaData
-  areaName: Door Area
+  areaName: Door
   cameraBoundsPrefab: {fileID: 9055149050570412722, guid: bf71a1fecc33c3441829c43de4cabb7c, type: 3}

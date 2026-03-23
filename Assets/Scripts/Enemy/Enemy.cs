@@ -12,13 +12,18 @@ public class Enemy : MonoBehaviour
     Rigidbody2D rb;
 
     Transform player;
+    PlayerHealth playerHealth;
     [SerializeField] float speed = 5f;
 
     [SerializeField] Slider healthBar;
 
-    bool isChasing = false;
-    
+    public bool isChasing = false;
 
+    [SerializeField] bool isFirstEnemy;
+    [SerializeField] bool isBoss;
+    StoryManager storyManager;
+    float nextFireTime = 0f;
+    float fireRate = 1f;
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -30,9 +35,9 @@ public class Enemy : MonoBehaviour
         originalPos = transform.position;
         healthBar.value = maxHealth;
 
-        GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
-        if (playerObj)
-            player = playerObj.transform;
+        player = Utilities.Player.transform;
+        storyManager = Utilities.StoryManager;
+        playerHealth = Utilities.Player.Health;
     }
 
     void FixedUpdate()
@@ -41,9 +46,18 @@ public class Enemy : MonoBehaviour
         {
             Vector3 direction = (player.position - transform.position).normalized;
             rb.linearVelocity = direction * speed;
+
+            if(Utilities.IsCloseToPlayer(transform))
+            {   
+                if (Time.time < nextFireTime)
+                return;
+                playerHealth.TakeDamage(10);
+                nextFireTime = Time.time + (1f / fireRate);
+            }
         }
     }
 
+    //Chases player when triggered
     void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
@@ -53,6 +67,7 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    //Stop chasing player and respawn
     void OnTriggerExit2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
@@ -79,8 +94,14 @@ public class Enemy : MonoBehaviour
         Debug.Log(gameObject.name + " Health: " + currentHealth);
 
         if (currentHealth <= 0)
-        {
-            Die();
+        {   
+            if(isBoss)
+            {
+                storyManager.EnterState(StoryState.Ending);
+                speed = 0;
+                healthBar.gameObject.SetActive(false);
+            }
+            else Die();
         }
     }
 
@@ -93,7 +114,9 @@ public class Enemy : MonoBehaviour
     }
 
     void Respawn()
-    {
+    {   
+        if(isFirstEnemy || isBoss) return;
+
         transform.position = originalPos;
         currentHealth = maxHealth;
         healthBar.value = maxHealth;

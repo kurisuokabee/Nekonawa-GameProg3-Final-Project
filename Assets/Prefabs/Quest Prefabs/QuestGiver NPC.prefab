@@ -231,19 +231,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::QuestGiverNPC
   quest:
     isActive: 0
-    questTitle: Quest One
-    keyRewardPrefab: {fileID: 6253808458496974453, guid: 5856d88da82a2394abe54345d65ad22c, type: 3}
+    isFinished: 0
+    questTitle: 0
     questGoal:
-      requiredQuestItem: {fileID: 1741870474135939249, guid: bdd55fcc0e8cf5244b8f15527f8d5347, type: 3}
-      currentQuestItem: {fileID: 0}
+      requiredQuestItem: 0
+      currentQuestItem: 0
   playerQuests: {fileID: 0}
-  questWindow: {fileID: 0}
-  giveItemWindow: {fileID: 0}
-  questTitleText: {fileID: 0}
-  acceptButton: {fileID: 0}
-  giveItemButton: {fileID: 0}
-  interactionDistance: 3
   talkIcon: {fileID: 1794522313319576797}
+  npcSprite: {fileID: 921101156346494112}
+  npc: {fileID: 0}
+  interactionDistance: 3
 --- !u!58 &5296021753056329597
 CircleCollider2D:
   m_ObjectHideFlags: 0

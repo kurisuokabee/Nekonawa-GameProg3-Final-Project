@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class QuestItem : MonoBehaviour
 {   
-    public string questItemName;
+    public QuestItemName questItemName;
     PlayerQuests playerQuests;
     bool goToPlayer;
 

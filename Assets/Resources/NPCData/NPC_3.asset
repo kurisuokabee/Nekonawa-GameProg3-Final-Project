@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b186216194a9726459b07fffa8c8bae7, type: 3}
+  m_Name: NPC_3
+  m_EditorClassIdentifier: Assembly-CSharp::NPCData
+  quest:
+    isActive: 0
+    isFinished: 0
+    questTitle: 2
+    questGoal:
+      requiredQuestItem: 2
+      currentQuestItem: 3
+  NPCName: Marcy
+  NPCImage: {fileID: 0}
+  StartingDialogue:
+  - Hello!
+  - This is my Quest.
+  - Will you Accept?
+  FinishingDialogue:
+  - Hello, Again!
+  - Did you finish the Quest?
+  - Let me see the Item...

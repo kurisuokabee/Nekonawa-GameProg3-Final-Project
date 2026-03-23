@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1427d950574af0439ddba8f87f193b2, type: 3}
   m_Name: Boss Area Data
   m_EditorClassIdentifier: Assembly-CSharp::AreaData
-  areaName: Boss Area
+  areaName: Boss
   cameraBoundsPrefab: {fileID: 4237414948849752836, guid: ab17eeaa778305343b28bb930fd9828c, type: 3}

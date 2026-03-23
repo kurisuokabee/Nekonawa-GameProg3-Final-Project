@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -43,6 +45,9 @@ public class GameController : MonoBehaviour
 
         //Load a checkpoint
         LoadGame();
+
+        //Load Utilities
+        Utilities.InitUtilities();
     }
 
     void Update()
@@ -58,7 +63,7 @@ public class GameController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.P))
         {
-            SaveGame(transform, "Limbo");
+            SaveGame();
         }
     }
 
@@ -69,29 +74,39 @@ public class GameController : MonoBehaviour
         currentState?.Enter();
     }
 
-    public void SaveGame(Transform spawnPos, string c_currentAreaName)
+    public void SaveGame()
     {
         var player = Utilities.Player;
 
+        Vector2 spawnPos = AreaManager.Instance.LastSpawnPos;
+        string currentAreaName = AreaManager.Instance.CurrentArea.areaName;
+
         SaveData data = new()
         {
-            playerPosX = spawnPos.position.x,
-            playerPosY = spawnPos.position.y,
+            playerPosX = spawnPos.x,
+            playerPosY = spawnPos.y,
             playerKeys = player.Quests.keysCollected,
             playerCurrentHealth = player.Health.currentHealth,
             playerAbilities = player.Abilities.abilities,
             slot1 = player.Abilities.slot1,
             slot2 = player.Abilities.slot2,
-            currentAreaName = c_currentAreaName
+            currentAreaName = currentAreaName,
+            quests = new List<QuestSaveData>()
+
         };
 
+        foreach (var npc in Utilities.AllNPCs)
+        {
+            data.quests.Add(npc.GetSaveData());
+        }
+        
 
         SaveSystem.SaveGame(data);
-        Debug.Log("Game saved at area: " + c_currentAreaName);
+        Debug.Log("Game saved at area: " + currentAreaName);
     }
 
     public void LoadGame()
-    {
+    {   
         SaveData data = SaveSystem.LoadGame();
         if (data == null)
             return;
@@ -118,22 +133,44 @@ public class GameController : MonoBehaviour
         // Set the current area
         AreaManager.Instance.SetCurrentArea(areaToLoad);
 
+        Vector2 spawnPos = new(data.playerPosX, data.playerPosY);
+        AreaManager.Instance.SetAreaVariables(areaToLoad, spawnPos);
+
         // Restore player state
-        player.PlayerGO.transform.position = new Vector2(data.playerPosX, data.playerPosY);
+        player.PlayerGO.transform.position = spawnPos;
         player.Health.UpdateHealth(data.playerCurrentHealth);
         player.Quests.keysCollected = data.playerKeys;
         player.Abilities.abilities = data.playerAbilities;
 
-        data.slot1.onCooldown = false;
-        data.slot2.onCooldown = false;
-        player.Abilities.EquipAbility(data.slot1, 0);
-        player.Abilities.EquipAbility(data.slot2, 1);
-        AbilityUIManager.Instance.UpdateSlotUI();
+        if(data.slot1 != null && data.slot2 != null)
+        {
+            data.slot1.onCooldown = false;
+            data.slot2.onCooldown = false;
+
+            player.Abilities.EquipAbility(data.slot1, 0);
+            player.Abilities.EquipAbility(data.slot2, 1);
+            AbilityUIManager.Instance.UpdateSlotUI();
+        }
         
         // Respawn if dead
         if (player.Health.isDead) player.Health.Respawn();
 
+        StartCoroutine(LoadAfterSceneReady(data));
+
         Debug.Log($"Loaded game in area: {savedAreaName}");
+    }
+
+    IEnumerator LoadAfterSceneReady(SaveData data)
+    {
+        yield return null; // wait 1 frame 
+
+        foreach (var npc in Utilities.AllNPCs)
+        {
+            foreach (var savedQuest in data.quests)
+            {
+                npc.LoadFromSave(savedQuest);
+            }
+        }
     }
 
     public void ResetSave()
