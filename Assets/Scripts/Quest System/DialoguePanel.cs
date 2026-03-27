@@ -27,7 +27,7 @@ public class DialoguePanel : MonoBehaviour
     public bool DialogueFinished { get; private set; }
     public Transform followTarget = null;
 
-    [SerializeField] private Vector3 offset = Vector3.up * 3;
+    [SerializeField] private Vector3 offset = Vector3.up * 3.5f;
     
     public void SetDialogue(List<string> newSentences)
     {

@@ -91,4 +91,9 @@ public class AbilityUIManager : MonoBehaviour
         panel.SetActive(false);
     }
 
+    public void CloseAbilitySwitchingPanel()
+    {
+        panel.SetActive(false);
+    }
+
 }

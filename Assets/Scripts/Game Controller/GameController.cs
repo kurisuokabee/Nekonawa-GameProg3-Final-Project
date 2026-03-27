@@ -45,9 +45,6 @@ public class GameController : MonoBehaviour
 
         //Load a checkpoint
         LoadGame();
-
-        //Load Utilities
-        Utilities.InitUtilities();
     }
 
     void Update()
@@ -77,6 +74,7 @@ public class GameController : MonoBehaviour
     public void SaveGame()
     {
         var player = Utilities.Player;
+        var storyManager = Utilities.StoryManager;
 
         Vector2 spawnPos = AreaManager.Instance.LastSpawnPos;
         string currentAreaName = AreaManager.Instance.CurrentArea.areaName;
@@ -91,7 +89,11 @@ public class GameController : MonoBehaviour
             slot1 = player.Abilities.slot1,
             slot2 = player.Abilities.slot2,
             currentAreaName = currentAreaName,
-            quests = new List<QuestSaveData>()
+            quests = new List<QuestSaveData>(),
+            doorAreaTutorialDone = storyManager.doorAreaTutorialDone,
+            angerAreaTutorialDone = storyManager.angerAreaTutorialDone,
+            gluttonyAreaTutorialDone = storyManager.gluttonyAreaTutorialDone,
+            introDone = storyManager.introDone
 
         };
 
@@ -112,6 +114,7 @@ public class GameController : MonoBehaviour
             return;
 
         var player = Utilities.Player;
+        var storyManager = Utilities.StoryManager;
 
         if(player.PlayerGO == null)
         {
@@ -131,11 +134,11 @@ public class GameController : MonoBehaviour
         }
 
         // Set the current area
-        AreaManager.Instance.SetCurrentArea(areaToLoad);
-
         Vector2 spawnPos = new(data.playerPosX, data.playerPosY);
         AreaManager.Instance.SetAreaVariables(areaToLoad, spawnPos);
+        AreaManager.Instance.SetCurrentArea(areaToLoad);
 
+        
         // Restore player state
         player.PlayerGO.transform.position = spawnPos;
         player.Health.UpdateHealth(data.playerCurrentHealth);
@@ -149,8 +152,12 @@ public class GameController : MonoBehaviour
 
             player.Abilities.EquipAbility(data.slot1, 0);
             player.Abilities.EquipAbility(data.slot2, 1);
-            AbilityUIManager.Instance.UpdateSlotUI();
         }
+
+        storyManager.introDone = data.introDone;
+        storyManager.doorAreaTutorialDone = data.doorAreaTutorialDone;
+        storyManager.angerAreaTutorialDone = data.angerAreaTutorialDone;
+        storyManager.gluttonyAreaTutorialDone = data.gluttonyAreaTutorialDone;
         
         // Respawn if dead
         if (player.Health.isDead) player.Health.Respawn();
@@ -163,6 +170,8 @@ public class GameController : MonoBehaviour
     IEnumerator LoadAfterSceneReady(SaveData data)
     {
         yield return null; // wait 1 frame 
+
+        AbilityUIManager.Instance.UpdateSlotUI();
 
         foreach (var npc in Utilities.AllNPCs)
         {
