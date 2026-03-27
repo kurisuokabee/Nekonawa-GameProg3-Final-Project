@@ -5,9 +5,8 @@ public class AreaManager : MonoBehaviour
 {
     public static AreaManager Instance;
 
-    private CinemachineCamera virtualCamera;
 
-    private CinemachineConfiner2D confiner;
+    [SerializeField] CinemachineConfiner2D confiner;
 
     public AreaData CurrentArea { get; private set; }
     public Vector2 LastSpawnPos { get; private set; }
@@ -19,11 +18,7 @@ public class AreaManager : MonoBehaviour
 
     }
 
-    void Start()
-    {
-        virtualCamera = Utilities.virtualCamera;
-        confiner = virtualCamera.GetComponent<CinemachineConfiner2D>();
-    }
+    
     
     public void SetCurrentArea(AreaData newArea)
     {

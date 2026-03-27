@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Shield Ability
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAbility
   abilityName: 2
-  cooldown: 5
+  cooldown: 15
   isUnlocked: 1
   onCooldown: 0

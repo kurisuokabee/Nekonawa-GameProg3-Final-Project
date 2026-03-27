@@ -12,7 +12,7 @@ public class AreaTransition : MonoBehaviour
     void Awake()
     {   
         Instance = this;
-        virtualCamera = Utilities.virtualCamera;
+        virtualCamera = GameObject.Find("Player CAM").GetComponent<CinemachineCamera>();
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -32,7 +32,7 @@ public class AreaTransition : MonoBehaviour
         LoadingScreen.Instance.ShowLoading();
 
         // Wait for fade duration
-        yield return new WaitForSecondsRealtime(1.5f);
+        yield return new WaitForSecondsRealtime(1f);
 
         // Teleport player and reset velocity
         Vector3 oldPosition = other.transform.position;
@@ -52,16 +52,31 @@ public class AreaTransition : MonoBehaviour
         // --- Update Current Area ---
         AreaManager.Instance.SetCurrentArea(areaData);
         AreaManager.Instance.SetAreaVariables(areaData, targetSpawnPoint.position);
-
-        // --- Save Current Area ---
-        GameController.Instance.SaveGame();
         Debug.Log("Current Area Updated: " + areaData.areaName);
 
         PlayerMovement.Instance.EnableMovement();
 
-        if(areaData.areaName == "Boss")
+        var storyManager = Utilities.StoryManager;
+        switch (areaData.areaName)
         {   
-            StoryManager.Instance.EnterState(StoryState.BossArea);
+            case "Boss":
+                storyManager.EnterState(StoryState.BossArea);
+                break;
+            case "Door":
+                storyManager.EnterState(StoryState.DoorArea);
+                break;
+            case "Gluttony":
+                storyManager.EnterState(StoryState.GluttonyArea);
+                break;  
+            case "Anger":  
+                storyManager.EnterState(StoryState.AngerArea);
+                break;      
+            default:
+                break;
         }
+
+        // --- Save Current Area ---
+        GameController.Instance.SaveGame();
+        
     }
 }
