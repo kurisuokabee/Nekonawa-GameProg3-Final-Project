@@ -51,7 +51,11 @@ public class Enemy : MonoBehaviour
 
     void FixedUpdate()
     {   
-        if(isBoss) return;
+        if (isBoss)
+        {
+            BossUpdate();
+            return;
+        }
 
         if (isChasing && player != null)
         {
@@ -108,6 +112,17 @@ public class Enemy : MonoBehaviour
                 animator.SetFloat("IdleY", idleDirection.y);
             }
         }
+    }
+
+    void BossUpdate()
+    {
+        if (player == null) return;
+
+        Vector2 direction = (player.position - transform.position).normalized;
+
+        // Just update idle direction to face player
+        animator.SetFloat("X", direction.x);
+        animator.SetFloat("Y", direction.y);
     }
 
     //Chases player when triggered
