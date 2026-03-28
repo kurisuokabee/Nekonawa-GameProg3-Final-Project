@@ -42,7 +42,7 @@ public class PlayerAbility : ScriptableObject
                 player.Movement.BoostSpeed(speedMultiplier, speedBoostDuration);
                 break;
             case AbilityName.Shield:
-                // player.Shield.Activate(shieldDuration );
+                player.Shield.ActivateShield();
                 break;
         }
     }

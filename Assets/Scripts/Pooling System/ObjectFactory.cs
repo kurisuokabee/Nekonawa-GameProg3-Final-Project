@@ -3,7 +3,8 @@ using UnityEngine;
 public enum ObjectType
 {
     Bullet,
-    Dialogue
+    Dialogue,
+    Icicle
 }
 
 public class ObjectFactory : MonoBehaviour

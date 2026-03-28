@@ -5,19 +5,13 @@ using UnityEngine;
 
 public static class Utilities 
 {   
-    static LayerMask clickableLayer;
+    static LayerMask clickableLayer = LayerMask.GetMask("Clickable");
     public static PlayerManager Player => PlayerManager.Instance;
     public static ObjectFactory Factory => ObjectFactory.Instance;
     public static DialogueUIManager DialogueUIManager => DialogueUIManager.Instance;
     public static StoryManager StoryManager => StoryManager.Instance;
-    public static CinemachineCamera virtualCamera;
     public static List<QuestGiverNPC> AllNPCs = new();
 
-    public static void InitUtilities()
-    {
-        clickableLayer = LayerMask.GetMask("Clickable");
-        virtualCamera = GameObject.Find("Player CAM").GetComponent<CinemachineCamera>();
-    }
     
     //Getting the gameobject of the clicked object
     public static GameObject GetClickedObject()
@@ -50,6 +44,7 @@ public static class Utilities
         AimAtMouse.Instance.enabled = false;
         AbilitySystem.Instance.enabled = false;
         Player.Movement.DisableMovement();
+        Player.Movement.animator.enabled = false;
     }
 
     public static void EnablePlayerControls()
@@ -58,6 +53,7 @@ public static class Utilities
         AimAtMouse.Instance.enabled = true;
         AbilitySystem.Instance.enabled = true;
         Player.Movement.EnableMovement();
+        Player.Movement.animator.enabled = true;
     }
 
     public static void MoveTowardsPlayer(Transform transform)
@@ -71,7 +67,12 @@ public static class Utilities
 
     public static bool IsCloseToPlayer(Transform transform)
     {
-        return (Player.transform.position - transform.position).sqrMagnitude <= 1f;
+        return (Player.transform.position - transform.position).sqrMagnitude <= .5f;
+    }
+
+    public static bool IsEnemyCloseToPlayer(Transform transform)
+    {
+        return (Player.transform.position - transform.position).sqrMagnitude <= 3f;
     }
 
     public static float NPCDistanceToPlayer(Transform transform)
