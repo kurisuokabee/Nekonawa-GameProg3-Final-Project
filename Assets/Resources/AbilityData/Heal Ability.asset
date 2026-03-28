@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Heal Ability
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAbility
   abilityName: 0
-  cooldown: 30
+  cooldown: 5
   isUnlocked: 1
   onCooldown: 0

@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Speed Ability
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAbility
   abilityName: 1
-  cooldown: 15
+  cooldown: 5
   isUnlocked: 1
   onCooldown: 0

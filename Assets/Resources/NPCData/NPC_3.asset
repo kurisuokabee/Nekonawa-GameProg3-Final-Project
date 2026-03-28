@@ -22,9 +22,9 @@ MonoBehaviour:
   NPCName: Marcy
   NPCImage: {fileID: 0}
   StartingDialogue:
-  - Tick Tock
-  - I ran out of time before i got here.
-  - I want to have more time.
+  - Hello!
+  - This is my Quest.
+  - Will you Accept?
   FinishingDialogue:
   - Hello, Again!
   - Did you finish the Quest?

@@ -2,16 +2,18 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
+
 public class SwordMode : MonoBehaviour, IPhone
 {
-    private bool isSwinging = false;
-    private HashSet<GameObject> hitEnemies = new HashSet<GameObject>();
+    [SerializeField] float swingAngle = 120f;
+    [SerializeField] float swingDuration = 0.2f;
+    [SerializeField] float returnDuration = 0.15f;
 
-    [SerializeField] GameObject swordSlashFX;
-    [SerializeField] int damage = 10;
+    private bool isSwinging = false;
+    HashSet<GameObject> hitEnemies = new HashSet<GameObject>();
 
     public void Use()
-    {
+    {   
         if (!isSwinging)
             StartCoroutine(Swing());
     }
@@ -24,9 +26,6 @@ public class SwordMode : MonoBehaviour, IPhone
     public void Exit()
     {
         isSwinging = false;
-        if (swordSlashFX != null)
-            swordSlashFX.SetActive(false);
-        hitEnemies.Clear();
         Debug.Log("Sword Mode Deactivated");
     }
 
@@ -35,51 +34,46 @@ public class SwordMode : MonoBehaviour, IPhone
         isSwinging = true;
         hitEnemies.Clear();
 
-        if (swordSlashFX != null)
+        float startAngle = -swingAngle / 2f;
+        float endAngle = swingAngle / 2f;
+
+        float time = 0f;
+
+        // Swing the sword
+        while (time < swingDuration)
         {
-            // Activate FX
-            swordSlashFX.SetActive(true);
+            float t = time / swingDuration;
+            t = Mathf.Sin(t * Mathf.PI); 
 
-            // Checks if it hits enemy
-            Collider2D swordCollider = GetComponent<Collider2D>();
-            if (swordCollider != null)
-            {
-                ContactFilter2D filter = new ContactFilter2D();
-                filter.SetLayerMask(LayerMask.GetMask("Enemy")); 
-                filter.useTriggers = true;
+            float angle = Mathf.Lerp(startAngle, endAngle, t);
+            transform.localRotation = Quaternion.Euler(0, 0, angle);
 
-                Collider2D[] results = new Collider2D[10];
-                int count = swordCollider.Overlap(filter, results);
-
-                for (int i = 0; i < count; i++)
-                {
-                    GameObject enemy = results[i].gameObject;
-                    if (!hitEnemies.Contains(enemy))
-                    {
-                        hitEnemies.Add(enemy);
-                        enemy.GetComponent<Enemy>().TakeDamage(damage);
-                    }
-                }
-            }
-
-            // Wait for FX animation to finish
-            Animator animator = swordSlashFX.GetComponent<Animator>();
-            if (animator != null)
-            {
-                yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length);
-            }
-            else
-            {
-                yield return new WaitForSeconds(0.5f); 
-            }
-
-            swordSlashFX.SetActive(false);
+            time += Time.unscaledDeltaTime;
+            yield return null;
         }
+
+        // return to orginal position
+        time = 0f;
+
+        while (time < returnDuration)
+        {
+            float t = time / returnDuration;
+
+            
+            t = 1 - Mathf.Pow(1 - t, 2);
+
+            float angle = Mathf.Lerp(startAngle, 0f, t);
+            transform.localRotation = Quaternion.Euler(0, 0, angle);
+
+            time += Time.unscaledDeltaTime;
+            yield return null;
+        }
+
+        transform.localRotation = Quaternion.identity;
 
         isSwinging = false;
     }
 
-    // Detect enemies entering mid-swing
     void OnTriggerEnter2D(Collider2D collision)
     {
         if (!isSwinging) return;
@@ -87,7 +81,8 @@ public class SwordMode : MonoBehaviour, IPhone
         if (collision.CompareTag("Enemy") && !hitEnemies.Contains(collision.gameObject))
         {
             hitEnemies.Add(collision.gameObject);
-            collision.GetComponent<Enemy>().TakeDamage(damage);
+
+            collision.GetComponent<Enemy>().TakeDamage(10);
         }
     }
 }

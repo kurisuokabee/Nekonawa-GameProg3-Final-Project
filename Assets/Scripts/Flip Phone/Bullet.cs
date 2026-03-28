@@ -3,7 +3,6 @@ using UnityEngine;
 public class Bullet : MonoBehaviour
 {   
     [SerializeField] float life = 5f;
-    [SerializeField] SpriteRenderer spriteRenderer;
     float t;
 
     ObjectFactory factory;
@@ -16,15 +15,12 @@ public class Bullet : MonoBehaviour
     void OnEnable()
     {
         t = 0f;
-        spriteRenderer.enabled = false;
     }
 
     void Update()
     {
         t += Time.deltaTime;
         if (t >= life) ReleaseBullet();
-
-        if(t >= .07f) spriteRenderer.enabled = true;
     }
     void OnTriggerEnter2D(Collider2D collision)
     {
@@ -42,9 +38,7 @@ public class Bullet : MonoBehaviour
         if(!gameObject.activeInHierarchy) return;
 
         rb.linearVelocity = Vector3.zero;
-        spriteRenderer.enabled = false;
         factory.Release(ObjectType.Bullet, gameObject);
-        
     }
 
     public void SetFactory(ObjectFactory factory)

@@ -17,11 +17,9 @@ public class FlipPhone : MonoBehaviour
 
     [SerializeField] private GameObject swordObj;
     [SerializeField] private GameObject gunObj;
-    [SerializeField] private GameObject phoneObj;
     [SerializeField] TextMeshProUGUI text;
     [SerializeField] private GameObject[] blockAttackUI;
     [SerializeField] AudioClip audioClip;
-    [SerializeField] Animator animator;
     private IPhone currentWeapon;
 
     [Header("Mode Switching Cooldown")]
@@ -58,9 +56,6 @@ public class FlipPhone : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Alpha2))
             SetFlipPhoneMode(FlipPhoneMode.Gun);
-
-        if (Input.GetKeyDown(KeyCode.Alpha3))
-            SetFlipPhoneMode(FlipPhoneMode.FlipPhone);    
     }
 
     void SetFlipPhoneMode(FlipPhoneMode mode)
@@ -75,7 +70,6 @@ public class FlipPhone : MonoBehaviour
 
         swordObj.SetActive(false);
         gunObj.SetActive(false);
-        phoneObj.SetActive(false);
 
         GameObject selected = null;
 
@@ -84,17 +78,10 @@ public class FlipPhone : MonoBehaviour
             case FlipPhoneMode.Sword:
                 selected = swordObj;
                 text.text = "Sword Mode";
-                animator.SetInteger("WeaponType", 1);
                 break;
             case FlipPhoneMode.Gun:
                 selected = gunObj;
                 text.text = "Gun Mode";
-                animator.SetInteger("WeaponType", 2);
-                break;  
-            case FlipPhoneMode.FlipPhone:
-                selected = phoneObj;
-                text.text = "Flip Phone";
-                animator.SetInteger("WeaponType", 0);   
                 break;  
         }
 
@@ -128,6 +115,4 @@ public class FlipPhone : MonoBehaviour
         }
         return false;
     }
-
-    
 }

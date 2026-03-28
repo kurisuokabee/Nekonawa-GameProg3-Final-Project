@@ -22,9 +22,9 @@ MonoBehaviour:
   NPCName: Pike
   NPCImage: {fileID: 0}
   StartingDialogue:
-  - Hello! There!
-  - I wish to play a guitar again. Will you find me one?
-  - Will you accept my quest?
+  - Hello!
+  - This is my Quest.
+  - Will you Accept?
   FinishingDialogue:
   - Hello, Again!
   - Did you finish the Quest?

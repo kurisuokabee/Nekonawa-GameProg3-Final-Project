@@ -22,7 +22,7 @@ public class DialogueUIManager : MonoBehaviour
     {
         GameObject panelObj = Utilities.Factory.SpawnObject(
             ObjectType.Dialogue,
-            npcTransform.position + Vector3.up * 3.5f,
+            npcTransform.position + Vector3.up * 3,
             Quaternion.identity
         );
 
@@ -47,7 +47,7 @@ public class DialogueUIManager : MonoBehaviour
     {   
         GameObject panelObj = Utilities.Factory.SpawnObject(
             ObjectType.Dialogue,
-            playerTransform.position + Vector3.up * 3.5f,
+            playerTransform.position + Vector3.up * 3,
             Quaternion.identity
         );
 

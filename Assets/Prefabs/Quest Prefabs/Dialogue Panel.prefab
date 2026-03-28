@@ -496,9 +496,8 @@ MonoBehaviour:
   interactbutton: {fileID: 8737034429839379174}
   exitbutton: {fileID: 7593530046372050718}
   typingSpeed: 0.03
-  isTyping: 0
   followTarget: {fileID: 0}
-  offset: {x: 0, y: 3.5, z: 0}
+  offset: {x: 0, y: 3, z: 0}
 --- !u!1 &2170361407173474294
 GameObject:
   m_ObjectHideFlags: 0

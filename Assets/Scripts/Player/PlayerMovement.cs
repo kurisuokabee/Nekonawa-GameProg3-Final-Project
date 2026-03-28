@@ -1,7 +1,5 @@
 using UnityEngine;
 using System.Collections;
-using UnityEditor.Rendering.LookDev;
-using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {   
@@ -13,24 +11,15 @@ public class PlayerMovement : MonoBehaviour
     private Vector3 m_Velocity = Vector3.zero;
     private bool canMove = true;   
 
-    public Animator animator;
-
-    private Vector2 lastDirection;
     void Awake()
     {   
         if (Instance == null) Instance = this;
         else Destroy(gameObject);
         
         rb = GetComponent<Rigidbody2D>();
-        animator = GetComponentInChildren<Animator>();
     }
 
-    void Start()
-    {
-        lastDirection = Vector2.down;
-    }
-
-   void Update()
+    void Update()
     {
         if (!canMove)
         {
@@ -38,41 +27,10 @@ public class PlayerMovement : MonoBehaviour
             return;
         }
 
-        // Get movement input
         movement.x = Input.GetAxisRaw("Horizontal");
         movement.y = Input.GetAxisRaw("Vertical");
+
         movement = movement.normalized;
-
-        bool isMoving = movement.sqrMagnitude > 0;
-        animator.SetBool("isWalking", isMoving);
-
-        // Determine animation direction
-        Vector2 animationDirection = lastDirection;
-
-        if (Input.GetMouseButton(0)) // attacking
-        {
-            // Face the cursor while attacking
-            Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            mousePos.z = 0f;
-            animationDirection = (mousePos - transform.position).normalized;
-        }
-        else if (isMoving)
-        {
-            // Face movement direction when moving
-            animationDirection = movement;
-        }
-
-        // Apply animation direction
-        animator.SetFloat("InputX", animationDirection.x);
-        animator.SetFloat("InputY", animationDirection.y);
-
-        // Update lastDirection for idle
-        if (animationDirection != Vector2.zero)
-            lastDirection = animationDirection;
-
-        // Set idle facing
-        animator.SetFloat("LastInputX", lastDirection.x);
-        animator.SetFloat("LastInputY", lastDirection.y);
     }
 
     void FixedUpdate()
