@@ -22,9 +22,9 @@ MonoBehaviour:
   NPCName: Eduardo
   NPCImage: {fileID: 0}
   StartingDialogue:
-  - Hello!
-  - This is my Quest.
-  - Will you Accept?
+  - Hello! Human.
+  - Will you find my Wife's ring? It is very dear to me.
+  - Can you do it?
   FinishingDialogue:
   - Hello, Again!
   - Did you finish the Quest?

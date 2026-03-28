@@ -11,6 +11,10 @@ public class SaveData
     public PlayerAbility slot1;
     public PlayerAbility slot2;
     public string currentAreaName;
+    public bool doorAreaTutorialDone;
+    public bool gluttonyAreaTutorialDone;
+    public bool angerAreaTutorialDone;
+    public bool introDone;
 
     public List<QuestSaveData> quests;
 
@@ -25,5 +29,9 @@ public class SaveData
         slot2 = null;
         currentAreaName = "Limbo"; // default area
         quests = new List<QuestSaveData>();
+        doorAreaTutorialDone = false;
+        gluttonyAreaTutorialDone = false;
+        angerAreaTutorialDone = false;
+        introDone = false;
     }
 }

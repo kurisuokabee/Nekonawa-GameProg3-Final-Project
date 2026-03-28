@@ -47,8 +47,8 @@ MonoBehaviour:
     - speakerName: 1
       line: There's only one way and that is to open the Door with 3 locks.
     - speakerName: 1
-      line: You need to find the ghosts which holds the key. They are found hereat
-        the Limbo Area.
+      line: You need to find the ghosts which holds the key. They are found here
+        at the Limbo Area.
     - speakerName: 0
       line: Okay, got it! This is just like a video game, huh? I've been waiting
         for like this to happen.
@@ -70,7 +70,7 @@ MonoBehaviour:
       line: Yes, I Tricked you! So now, GIVE ME YOUR CHARGER!!!!!!!!!!!!!!
     - speakerName: 0
       line: My Charger? Wait...STOP!
-  - blockName: 3
+  - blockName: 6
     lines:
     - speakerName: 4
       line: No! How am I defeated? This can't be happening...
@@ -103,3 +103,15 @@ MonoBehaviour:
       line: Yeah, who cares...
     - speakerName: 0
       line: HEHE!
+  - blockName: 3
+    lines:
+    - speakerName: 1
+      line: This is the area with the Door that have 3 locks.
+  - blockName: 4
+    lines:
+    - speakerName: 1
+      line: This is the Gluttony and Lust Area.
+  - blockName: 5
+    lines:
+    - speakerName: 1
+      line: This is the Anger and Greed Area.
