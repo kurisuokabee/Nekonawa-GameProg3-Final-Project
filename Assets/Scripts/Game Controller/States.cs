@@ -12,6 +12,7 @@ public class PlayingState : IGameState
     public void Enter()
     {
         Debug.Log("Playing State");
+        Utilities.EnablePlayerControls();
         Time.timeScale = 1f;
 
         //Clear commands
@@ -35,10 +36,10 @@ public class PlayingState : IGameState
         controller.InputHandler.HandleInput();
 
         //Triggers Gameover for testing
-        if (Input.GetKeyDown(KeyCode.K))
-        {
-            controller.ChangeState(controller.GameOverState);
-        }
+        // if (Input.GetKeyDown(KeyCode.K))
+        // {
+        //     controller.ChangeState(controller.GameOverState);
+        // }
     }
 }
 
@@ -68,7 +69,8 @@ public class PausedState : IGameState
     }
 
     public void Exit()
-    {
+    {   
+        Time.timeScale = 1f;
         Debug.Log("Game Resuming");
     }
 

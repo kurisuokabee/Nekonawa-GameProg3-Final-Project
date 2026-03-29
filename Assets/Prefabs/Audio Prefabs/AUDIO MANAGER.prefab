@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 105961713398352646}
   - component: {fileID: 6373711061445163712}
+  - component: {fileID: 683148870708977815}
   m_Layer: 0
   m_Name: AUDIO MANAGER
   m_TagString: Untagged
@@ -45,3 +46,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AudioManager
   audioMixer: {fileID: 24100000, guid: 48124b4fb42653e468198ac6686ff576, type: 2}
+--- !u!114 &683148870708977815
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8145029751880384192}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15d6bc0a33498f04b9ead79cd5253f5e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AutoButtonSound
+  clickSound: {fileID: 8300000, guid: de40c25c265b75446b253aa07a974a9e, type: 3}

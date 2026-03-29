@@ -14,11 +14,11 @@ public class PlayerHealth : MonoBehaviour
     void Update()
     {   
         //For testing
-        if (Input.GetKeyDown(KeyCode.Space))
-        {   
-            SoundFXManager.Instance.PlaySound(audioClip, transform, 1f);
-            TakeDamage(10);
-        }
+        // if (Input.GetKeyDown(KeyCode.Space))
+        // {   
+        //     SoundFXManager.Instance.PlaySound(audioClip, transform, 1f);
+        //     TakeDamage(10);
+        // }
     }
 
     public void TakeDamage(int damage)

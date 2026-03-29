@@ -1,5 +1,6 @@
 using UnityEngine;
 using Unity.Cinemachine;
+using System;
 
 public class AreaManager : MonoBehaviour
 {
@@ -17,8 +18,6 @@ public class AreaManager : MonoBehaviour
         else Destroy(gameObject);
 
     }
-
-    
     
     public void SetCurrentArea(AreaData newArea)
     {

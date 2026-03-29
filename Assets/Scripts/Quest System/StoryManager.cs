@@ -209,5 +209,12 @@ public class StoryManager : MonoBehaviour
         SceneManager.LoadScene("MainMenu Scene");
         GameController.Instance.ResetSave();
     }
+
+    public void GoToMainMenuFromPause()
+    {
+        SceneManager.LoadScene("MainMenu Scene");
+        GameController.Instance.SaveGame();
+        Utilities.AllNPCs.Clear();
+    }
 }
 

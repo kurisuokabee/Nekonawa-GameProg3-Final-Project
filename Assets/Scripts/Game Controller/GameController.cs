@@ -53,15 +53,15 @@ public class GameController : MonoBehaviour
 
 
         //For Testing
-        if (Input.GetKeyDown(KeyCode.L))
-        {
-            ResetSave();
-        }
+        // if (Input.GetKeyDown(KeyCode.L))
+        // {
+        //     ResetSave();
+        // }
 
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            SaveGame();
-        }
+        // if (Input.GetKeyDown(KeyCode.P))
+        // {
+        //     SaveGame();
+        // }
     }
 
     public void ChangeState(IGameState newState)
@@ -77,7 +77,9 @@ public class GameController : MonoBehaviour
         var storyManager = Utilities.StoryManager;
 
         Vector2 spawnPos = AreaManager.Instance.LastSpawnPos;
-        string currentAreaName = AreaManager.Instance.CurrentArea.areaName;
+        
+        string currentAreaName = AreaManager.Instance?.CurrentArea?.areaName ?? "Limbo";
+         
 
         SaveData data = new()
         {
