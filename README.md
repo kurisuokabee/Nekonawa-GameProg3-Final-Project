@@ -4,6 +4,8 @@
 
 Trapped in Hell with only your upgradable phone, you must survive twisted realms, fight monstrous souls, and complete their quests to earn the keys needed to unlock a mysterious door. Cryptic calls from the devil’s “guide” test your wits as you navigate Limbo, Lust & Gluttony, and Greed & Anger—each step a fight for survival and their entertainment.
 
+> ⚠️ The game is not fully finished, but the ending is achievable.
+
 ## Gameplay Overview
 
 - **Explore Hell:** Traverse Limbo, Lust & Gluttony, and Greed & Anger, each with unique challenges and monsters.  
