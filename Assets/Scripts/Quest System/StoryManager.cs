@@ -10,7 +10,11 @@ public enum StoryState
     Intro,
     FirstEnemyKilled,
     BossArea,
-    Ending
+    DoorArea,
+    GluttonyArea,
+    AngerArea,
+    Ending,
+    Default
 }
 
 public class StoryManager : MonoBehaviour
@@ -18,13 +22,20 @@ public class StoryManager : MonoBehaviour
     public static StoryManager Instance { get; private set; }
     DialogueUIManager dialogueUIManager;
     [SerializeField]StoryDialogueData storyDialogueData;
-    [SerializeField] Enemy firstEnemy;
-    [SerializeField] Enemy bossEnemy;
+    [SerializeField] GameObject firstEnemy;
+    [SerializeField] GameObject bossEnemy;
+    [SerializeField] GameObject bossHealthBar;
     [SerializeField] GameObject endCreditsPanel;
+    public bool doorAreaTutorialDone;
+    public bool gluttonyAreaTutorialDone;
+    public bool angerAreaTutorialDone;
+    public bool introDone;
  
     GameObject currentPanel;
-    StoryState currentState;
-    bool isFirstEnemyKilled = false;
+    [SerializeField]StoryState currentState;
+    Coroutine currentCoroutine;
+    static List<string> tempList = new List<string>(1);
+    
     private static WaitForSecondsRealtime _waitForSecondsRealtime0_5 = new WaitForSecondsRealtime(0.5f);
     void Awake()
     {
@@ -46,13 +57,6 @@ public class StoryManager : MonoBehaviour
         EnterState(currentState);
     }
 
-    void Update()
-    {
-        if(!firstEnemy.gameObject.activeInHierarchy && !isFirstEnemyKilled)
-        {
-            EnterState(StoryState.FirstEnemyKilled);
-        }
-    }
     public void PlayDialogueBlock(StoryState blockName, Action onFinish)
     {
         DialogueBlock block = storyDialogueData.GetBlock(blockName);
@@ -62,87 +66,141 @@ public class StoryManager : MonoBehaviour
             return;
         }
 
+        ClearCurrentPanel();
+
         DialoguePanel panel = dialogueUIManager.CreateStoryDialoguePanel(transform);
         currentPanel = panel.gameObject;
-        
-        StartCoroutine(PlayBlockCoroutine(panel, block, onFinish));
+
+        currentCoroutine = StartCoroutine(PlayBlockCoroutine(panel, block, onFinish));
     }
 
     IEnumerator PlayBlockCoroutine(DialoguePanel panel, DialogueBlock block, Action onFinish)
-    {   
-        //Loop through all lines from the dialogue block
+    {
         for (int i = 0; i < block.lines.Count; i++)
         {
             var line = block.lines[i];
 
-            // Change speaker
             panel.npcNameText.text = line.speakerName.ToString();
 
-            // Show dialogue line
-            panel.SetDialogue(new List<string> { line.line });
+            tempList.Clear();
+            tempList.Add(line.line);
+            panel.SetDialogue(tempList);
 
-            //Delay before skipping dialogue to avoid skipping dialogue from double clicks
             yield return _waitForSecondsRealtime0_5;
 
-            // Only wait for left click if it's NOT the last line
             if (i < block.lines.Count - 1)
-            {
                 yield return new WaitUntil(() => Input.GetMouseButtonDown(0));
-            }
         }
 
-        //Dialogue block is done
         dialogueUIManager.InitInteractButton(this, panel, onFinish, "Continue");
     }
 
     void OnDialogueFinish(StoryState state)
-    {
-        Utilities.Factory.Release(ObjectType.Dialogue, currentPanel);
+    {   
+        ClearCurrentPanel();
 
-        switch(state)
+        GameController.Instance.SaveGame();
+        currentState = state;
+        switch (state)
         {
             case StoryState.Intro:
                 Utilities.EnablePlayerControls();
-                firstEnemy.gameObject.SetActive(true);
-                firstEnemy.isChasing = true;
+                firstEnemy.SetActive(true);
+                firstEnemy.GetComponent<Enemy>().isChasing = true;
+                introDone = true;
                 break;
-            
+
             case StoryState.BossArea:
                 Utilities.EnablePlayerControls();
-                bossEnemy.isChasing = true;
-            break;
+                bossHealthBar.SetActive(true);
+                bossEnemy.GetComponent<Lucifer_SM>().ChangeState<Lucifer_DecideState>();
+                break;
 
             case StoryState.Ending:
                 endCreditsPanel.SetActive(true);
                 endCreditsPanel.GetComponentInChildren<Button>().onClick.AddListener(GoToMainMenu);
-            break;
+                break;
+            case StoryState.FirstEnemyKilled:
+                break;
+            case StoryState.DoorArea:
+                doorAreaTutorialDone = true;
+                break;
+            case StoryState.GluttonyArea:
+                gluttonyAreaTutorialDone = true;
+                break;
+            case StoryState.AngerArea:
+                angerAreaTutorialDone = true;
+                break;
+            case StoryState.Default:
+                break;
         }
+
+        EnterState(StoryState.Default);
     }
 
     public void EnterState(StoryState state)
-    {
-        switch(state)
+    {   
+        currentState = state;
+        switch (state)
         {
             case StoryState.Intro:
+                if(introDone) return;
                 Utilities.DisablePlayerControls();
-                PlayDialogueBlock(StoryState.Intro,() => OnDialogueFinish(state));
+                PlayStateDialogue(state);
                 break;
 
             case StoryState.FirstEnemyKilled:
-                isFirstEnemyKilled = true;
-                PlayDialogueBlock(StoryState.FirstEnemyKilled,() => OnDialogueFinish(state));
-            break;    
+                PlayStateDialogue(state);
+                break;
 
             case StoryState.BossArea:
                 Utilities.DisablePlayerControls();
-                bossEnemy.gameObject.SetActive(true);
-                PlayDialogueBlock(StoryState.BossArea,() => OnDialogueFinish(state));
-            break;
+                bossEnemy.SetActive(true);
+                PlayStateDialogue(state);
+                break;
 
             case StoryState.Ending:
-                Utilities.DisablePlayerControls();
-                PlayDialogueBlock(StoryState.Ending,() => OnDialogueFinish(state));
+                Utilities.Player.Health.Heal(100);
+                Utilities.DisablePlayerControls(); 
+                bossEnemy.GetComponent<Lucifer_SM>().enabled = false;
+                bossEnemy.GetComponent<Lucifer_DecideState>().enabled = false; 
+                bossHealthBar.SetActive(false);
+                PlayStateDialogue(state);
                 break;
+            case StoryState.DoorArea:
+                if (doorAreaTutorialDone) return;
+                PlayStateDialogue(state);
+                break;
+            case StoryState.GluttonyArea:
+                if (gluttonyAreaTutorialDone) return;
+                PlayStateDialogue(state);
+                break;
+            case StoryState.AngerArea:
+                if (angerAreaTutorialDone) return;
+                PlayStateDialogue(state);
+                break;
+            case StoryState.Default:
+                break;
+        }
+    }
+
+    void PlayStateDialogue(StoryState state)
+    {
+        PlayDialogueBlock(state, () => OnDialogueFinish(state));
+    }
+
+    void ClearCurrentPanel()
+    {
+        if (currentPanel)
+        {
+            Utilities.Factory.Release(ObjectType.Dialogue, currentPanel);
+            currentPanel = null;
+        }
+
+        if (currentCoroutine != null)
+        {
+            StopCoroutine(currentCoroutine);
+            currentCoroutine = null;
         }
     }
 
